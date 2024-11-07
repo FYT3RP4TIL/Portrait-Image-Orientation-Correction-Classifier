@@ -46,7 +46,7 @@ valid_generator = datagen.flow_from_dataframe(...)
 test_generator_final = test_datagen_final.flow_from_dataframe(...)
 ```
 
-## 🏛️ MobileNet Model Architecture
+## 🏛️ Mobile-Net Model Architecture
 The model architecture is based on the MobileNet convolutional neural network, which is known for its efficiency and effectiveness in mobile and embedded devices.
 
 ![Dilated-MobileNet-architecture-with-different-dilation-rates-on-its-depthwise](https://github.com/user-attachments/assets/11caf561-49c9-43a3-82db-fb30bc7c7c60)
@@ -82,7 +82,7 @@ def create_mobilenet_model():
     return model
 ```
 
-## 🏋️‍♀️ Training Configuration
+## 🏋️‍♀️ Training Configuration (Mobile-Net)
 The MobileNet model is trained using the following configuration:
 
 ```python
@@ -138,6 +138,10 @@ def train_model(model, train_generator, valid_generator, filepath, epochs=10, ba
 
     return model
 ```
+## Training Output
+
+![download](https://github.com/user-attachments/assets/218d891c-c3c9-4b71-85d2-ab2148aad1fe)
+![download](https://github.com/user-attachments/assets/27b869cf-0d65-4f01-a1fc-bfe4a8cfa839)
 
 ## 📊 Expected Performance
 The model is expected to achieve the following performance metrics on the test set:
