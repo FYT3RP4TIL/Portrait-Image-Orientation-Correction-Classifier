@@ -1,16 +1,16 @@
 # 📷 Portrait Image Orientation Classifier Using MobileNet
 
-## Overview
+## 🌟 Overview
 This project implements a portrait orientation classifier using the MobileNet architecture via TensorFlow. The system identifies whether a portrait image is rotated (0°, 90°, 180°, or 270°) and automatically corrects it to the standard upright position, utilizing transfer learning for efficient training and deployment.
 
-## Features
-✨ Transfer learning with MobileNet base model
-🔢 4-class orientation classification (0°, 90°, 180°, 270°)
-🔄 Automatic orientation correction
-⚡ Efficient model with low computational requirements
-🔒 Batch processing capabilities
+## ✨ Features
+- ✨ Transfer learning with MobileNet base model
+- 🔢 4-class orientation classification (0°, 90°, 180°, 270°)
+- 🔄 Automatic orientation correction
+- ⚡ Efficient model with low computational requirements
+- 🔒 Batch processing capabilities
 
-## Requirements
+## 📋 Requirements
 ```
 🐍 tensorflow>=2.x
 📚 numpy
@@ -19,7 +19,7 @@ This project implements a portrait orientation classifier using the MobileNet ar
 📏 scikit-learn
 ```
 
-## Dataset Description
+## 🗂️ Dataset Description
 This project utilizes the Kaggle dataset [Deeper1: Rotated Faces Dataset](https://www.kaggle.com/datasets/rodrigov/deeper1/data), which contains a diverse collection of images that have been intentionally rotated in four primary directions: right, left, upside down, and upright. Each image is associated with a label indicating its original orientation.
 
 The dataset characteristics include:
@@ -28,7 +28,7 @@ The dataset characteristics include:
 - 📝 Clear labels: Each image is associated with a label indicating its original orientation (right, left, upside down, or upright), facilitating the training process.
 - 🔍 Format: The images are in [JPG, PNG] format and have dimensions of [150, 150, 3].
 
-## Data Preprocessing
+## 🛠️ Data Preprocessing
 Before feeding the data into the model, we perform the following preprocessing steps:
 
 ```python
@@ -46,7 +46,7 @@ valid_generator = datagen.flow_from_dataframe(...)
 test_generator_final = test_datagen_final.flow_from_dataframe(...)
 ```
 
-## MobileNet Model Architecture
+## 🏛️ MobileNet Model Architecture
 The model architecture is based on the MobileNet convolutional neural network, which is known for its efficiency and effectiveness in mobile and embedded devices.
 
 ![Dilated-MobileNet-architecture-with-different-dilation-rates-on-its-depthwise](https://github.com/user-attachments/assets/11caf561-49c9-43a3-82db-fb30bc7c7c60)
@@ -82,7 +82,7 @@ def create_mobilenet_model():
     return model
 ```
 
-## Training Configuration
+## 🏋️‍♀️ Training Configuration
 The MobileNet model is trained using the following configuration:
 
 ```python
@@ -139,7 +139,7 @@ def train_model(model, train_generator, valid_generator, filepath, epochs=10, ba
     return model
 ```
 
-## Expected Performance
+## 📊 Expected Performance
 The model is expected to achieve the following performance metrics on the test set:
 
 ```
@@ -147,12 +147,12 @@ The model is expected to achieve the following performance metrics on the test s
 [0.09530360996723175, 0.9701370596885681]
 ```
 
-## Predictions
+## 🔍 Predictions
 The trained model can accurately predict the orientation of portrait images, as shown in the following example:
 
 ![1](https://github.com/user-attachments/assets/44acf762-f799-4b35-a93d-f756e37e0bca)
 
-## Advantages of Using MobileNet
+## 🚀 Advantages of Using MobileNet
 1. **Efficient Architecture**:
    - 🔍 Lightweight model suitable for mobile and embedded devices
    - ⚡ Fast inference time
@@ -163,7 +163,7 @@ The trained model can accurately predict the orientation of portrait images, as 
    - 🏆 Strong feature extraction capabilities
    - 🕰️ Reduced training time and data requirements
 
-## Articles and Research Papers
+## 📚 Articles and Research Papers
 - [Orientation Visualization for Convolutional Neural Networks](https://www.cs.toronto.edu/~guerzhoy/oriviz/crv17.pdf)
 - [Automatic Image Orientation Detection Using Deep Learning](https://www.tdcommons.org/cgi/viewcontent.cgi?article=6334&context=dpubs_series)
 - [Going Deeper with Convolutions: The Inception Paper Explained](https://medium.com/aiguys/going-deeper-with-convolutions-the-inception-paper-explained-841a0c661fd3)
