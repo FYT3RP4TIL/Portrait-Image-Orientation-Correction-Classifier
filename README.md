@@ -40,10 +40,46 @@ datagen = ImageDataGenerator(rescale=1./255.)
 # Separate test datagen, only rescaling
 test_datagen_final = ImageDataGenerator(rescale=1./255.)
 
-# Train, validation, and test generators
-train_generator = datagen.flow_from_dataframe(...)
-valid_generator = datagen.flow_from_dataframe(...)
-test_generator_final = test_datagen_final.flow_from_dataframe(...)
+# Train generator
+train_generator = datagen.flow_from_dataframe(
+    dataframe=train_df,
+    directory="/root/.cache/kagglehub/datasets/rodrigov/deeper1/versions/1/train_rotfaces/train",
+    x_col="fn",
+    y_col="label",
+    batch_size=32,
+    seed=42,
+    classes=['rotated_left', 'rotated_right', 'upright', 'upside_down'],
+    shuffle=True,
+    class_mode="categorical",
+    target_size=(150, 150)
+)
+
+# Validation generator
+valid_generator = datagen.flow_from_dataframe(
+    dataframe=valid_df,
+    directory="/root/.cache/kagglehub/datasets/rodrigov/deeper1/versions/1/train_rotfaces/train",
+    x_col="fn",
+    y_col="label",
+    batch_size=32,
+    seed=42,
+    shuffle=True,
+    classes=['rotated_left', 'rotated_right', 'upright', 'upside_down'],
+    class_mode="categorical",
+    target_size=(150, 150)
+)
+
+# Test generator (using a portion of train data as test set)
+# Test generator (with labels included)
+test_generator_final = test_datagen_final.flow_from_dataframe(
+    dataframe=test_df,
+    directory="/root/.cache/kagglehub/datasets/rodrigov/deeper1/versions/1/train_rotfaces/train",  # Same directory as train
+    x_col="fn",   # Image filenames
+    y_col="label",  # Labels
+    target_size=(150, 150),
+    batch_size=32,
+    shuffle=False,  # No need to shuffle for test data
+    class_mode="categorical"  # Ensure this is set to categorical to return labels
+)
 ```
 
 ## 🏛️ Mobile-Net Model Architecture
@@ -163,21 +199,104 @@ rotated_right       0.97      0.97      0.97      1241
  weighted avg       0.97      0.97      0.97      4889
 ```
 
+
+## 🏛️ InceptionV3 Model Architecture
+The model architecture is based on the MobileNet convolutional neural network, which is known for its efficiency and effectiveness in mobile and embedded devices.
+
+![image](https://github.com/user-attachments/assets/26e06446-661b-49a5-8e1a-8965d60790dc)
+
+
+```python
+def create_model_inception():
+    input_layer = Input(shape=(150, 150, 3))
+    inception = InceptionV3(include_top=False, weights='imagenet', input_tensor=input_layer)
+
+    x = Flatten()(inception.output)
+    x = Dense(256, activation = "relu")(x)
+    output_layer = Dense(4, activation='softmax')(x)
+
+    model = Model(inputs=input_layer, outputs=output_layer)
+    model.summary()
+    sgd = SGD(learning_rate=1e-3, decay=1e-6, momentum=0.9, nesterov=True)
+    model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['acc'])
+    return model
+```
+
+## 🏋️‍♀️ Training Configuration (InceptionV3)
+The MobileNet model is trained using the following configuration:
+
+```python
+def train(model, filepath):
+    checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+    callbacks_list = [checkpoint]
+
+    n_train = 39117
+    batch_size = 300
+    n_valid = 9779
+
+    try:
+        history = model.fit(
+            train_generator,
+            steps_per_epoch=n_train//batch_size,
+            epochs=10,
+            validation_data=valid_generator,
+            validation_steps=n_valid//batch_size,
+            callbacks=callbacks_list
+        )
+    except Exception as e:
+        print(f"Error during training: {e}")
+        return None
+
+    # Plot
+    acc = history.history['acc']
+    val_acc = history.history['val_acc']
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    epochs = range(1, len(acc) + 1)
+
+    plt.plot(epochs, acc, 'bo', label='Training acc')
+    plt.plot(epochs, val_acc, 'b', label='Validation acc')
+    plt.title('Training and validation accuracy')
+    plt.legend()
+    plt.figure()
+    plt.plot(epochs, loss, 'bo', label='Training loss')
+    plt.plot(epochs, val_loss, 'b', label='Validation loss')
+    plt.title('Training and validation loss')
+    plt.legend()
+    plt.show()
+
+    return model
+```
+## Training Output
+
+![download](https://github.com/user-attachments/assets/b442b726-c280-4ca7-9b2c-2220c0bf93c1)
+![download](https://github.com/user-attachments/assets/069ec90b-fe95-4680-9a70-8b9dfc7ffbfa)
+
+## 📊 Performance
+The model is expected to achieve the following performance metrics on the test set:
+
+```
+[Loss, Accuracy]
+[0.05644455924630165, 0.9803640842437744]
+
+Accuracy: 98.04%
+               precision    recall  f1-score   support
+
+ rotated_left       0.98      0.98      0.98      1206
+rotated_right       0.95      1.00      0.97      1241
+      upright       1.00      0.98      0.99      1223
+  upside_down       0.99      0.97      0.98      1219
+
+     accuracy                           0.98      4889
+    macro avg       0.98      0.98      0.98      4889
+ weighted avg       0.98      0.98      0.98      4889
+```
+
 ## 🔍 Predictions
 The trained model can accurately predict the orientation of portrait images, as shown in the following example:
 
 ![1](https://github.com/user-attachments/assets/44acf762-f799-4b35-a93d-f756e37e0bca)
 
-## 🚀 Advantages of Using MobileNet
-1. **Efficient Architecture**:
-   - 🔍 Lightweight model suitable for mobile and embedded devices
-   - ⚡ Fast inference time
-   - 💾 Small model size
-
-2. **Transfer Learning Benefits**:
-   - 🌐 Pre-trained on ImageNet
-   - 🏆 Strong feature extraction capabilities
-   - 🕰️ Reduced training time and data requirements
 
 ## 📚 Articles and Research Papers
 - [Orientation Visualization for Convolutional Neural Networks](https://www.cs.toronto.edu/~guerzhoy/oriviz/crv17.pdf)
