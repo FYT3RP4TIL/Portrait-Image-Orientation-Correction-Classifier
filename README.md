@@ -145,6 +145,18 @@ The model is expected to achieve the following performance metrics on the test s
 ```
 [Loss, Accuracy]
 [0.09530360996723175, 0.9701370596885681]
+
+Accuracy: 97.01%
+               precision    recall  f1-score   support
+
+ rotated_left       0.95      0.97      0.96      1206
+rotated_right       0.97      0.97      0.97      1241
+      upright       0.99      0.97      0.98      1223
+  upside_down       0.96      0.98      0.97      1219
+
+     accuracy                           0.97      4889
+    macro avg       0.97      0.97      0.97      4889
+ weighted avg       0.97      0.97      0.97      4889
 ```
 
 ## 🔍 Predictions
