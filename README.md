@@ -89,6 +89,9 @@ test_generator_final = test_datagen_final.flow_from_dataframe(
 
 
 # Mobile-Net Model Architecture
+
+![Dilated-MobileNet-architecture-with-different-dilation-rates-on-its-depthwise](https://github.com/user-attachments/assets/11caf561-49c9-43a3-82db-fb30bc7c7c60)
+
 ```python
 from tensorflow.keras.applications import MobileNet
 from tensorflow.keras.models import Model
@@ -199,3 +202,9 @@ def train_model(model, train_generator, valid_generator, filepath, epochs=10, ba
    - Pre-trained on ImageNet
    - Strong feature extraction capabilities
    - Reduced training time and data requirements
+
+## Articles and Research Papers
+- https://www.cs.toronto.edu/~guerzhoy/oriviz/crv17.pdf
+- https://www.tdcommons.org/cgi/viewcontent.cgi?article=6334&context=dpubs_series
+- https://medium.com/aiguys/going-deeper-with-convolutions-the-inception-paper-explained-841a0c661fd3
+- https://medium.com/@zaidbinmuzammil123/unleashing-the-power-of-mobilenet-a-comparison-with-simple-convolutional-neural-networks-71d49f8c86ef
