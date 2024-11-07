@@ -221,6 +221,171 @@ rotated_right       0.97      0.93      0.95      1241
 ```
 
 
+## 🏛️ VGG-16 Model Architecture
+The model architecture is based on the MobileNet convolutional neural network, which is known for its efficiency and effectiveness in mobile and embedded devices.
+
+
+```python
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input, Flatten, Dense
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import ModelCheckpoint
+import tensorflow as tf
+import matplotlib.pyplot as plt
+
+
+# Function to create and compile the VGG16 model
+def create_vgg16_model():
+    # Define the input layer with a shape suitable for VGG16 (224x224 RGB image)
+    input_layer = Input(shape=(150, 150, 3))
+
+    # Load the VGG16 model, excluding the fully connected top layers (for feature extraction)
+    # Pre-trained weights on ImageNet are used
+    vgg16 = VGG16(include_top=False, weights='imagenet', input_tensor=input_layer)
+
+    # Flatten the output from the last layer of VGG16 for input into fully connected layers
+    x = Flatten()(vgg16.output)
+    # Add a dense layer with 256 units and ReLU activation for intermediate processing
+    x = Dense(256, activation='relu')(x)
+    # Final output layer with 4 units and softmax activation for multiclass classification (4 classes)
+    output_layer = Dense(4, activation='softmax')(x)
+
+    # Define the complete model linking input and output layers
+    model = Model(inputs=input_layer, outputs=output_layer)
+
+    # Freeze all layers in the VGG16 base model to retain pre-trained features
+    for layer in vgg16.layers:
+        layer.trainable = False
+
+    # Set up the Adam optimizer with a low learning rate for fine-tuning
+    adam = Adam(learning_rate=1e-4)
+    # Compile the model with categorical cross-entropy loss and accuracy metric
+    model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+
+    # Confirmation of successful model compilation and summary of model architecture
+    print("Model Compiled Successfully.")
+    print(model.summary())
+
+    return model
+```
+
+## 🏋️‍♀️ Training Configuration (VGG-16)
+The MobileNet model is trained using the following configuration:
+
+```python
+# Train VGG16 model
+def train_vgg16_model(model, train_generator, valid_generator, filepath, epochs=10, batch_size=32):
+    # Initial message to indicate the start of training
+    print("Starting Model Training.")
+
+    # Set up checkpointing to save the best model based on validation accuracy
+    checkpoint = ModelCheckpoint(filepath, monitor='val_accuracy', verbose=1, save_best_only=True, mode='max')
+    callbacks_list = [checkpoint]
+
+    # Define the number of training and validation samples
+    n_train = 39117
+    n_valid = 9779
+
+    try:
+        # Start training the model with the specified parameters
+        history = model.fit(
+            train_generator,
+            steps_per_epoch=n_train // batch_size,  # Total training steps per epoch
+            epochs=epochs,  # Number of training epochs
+            validation_data=valid_generator,
+            validation_steps=n_valid // batch_size,  # Validation steps per epoch
+            callbacks=callbacks_list  # List of callbacks (here, checkpointing)
+        )
+        print("Model Training Completed Successfully.")
+    except Exception as e:
+        # Error handling to catch any issues during training
+        print(f"Error during training: {e}")
+        return None
+
+    # Extracting accuracy and loss values for training and validation to plot performance
+    acc = history.history['accuracy']
+    val_acc = history.history['val_accuracy']
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    epoch_range = range(1, len(acc) + 1)
+
+    # Plot training and validation accuracy per epoch
+    plt.plot(epoch_range, acc, 'b-', label='Training Accuracy')
+    plt.plot(epoch_range, val_acc, 'r-', label='Validation Accuracy')
+    plt.title('Training and Validation Accuracy')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.grid()  # Add grid for easier readability
+    plt.figure()
+
+    # Plot training and validation loss per epoch
+    plt.plot(epoch_range, loss, 'b-', label='Training Loss')
+    plt.plot(epoch_range, val_loss, 'r-', label='Validation Loss')
+    plt.title('Training and Validation Loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.grid()  # Add grid for easier readability
+    plt.show()
+
+    # Return the trained model for further use
+    return model
+
+
+
+```
+## Training Output (Batch Size 32)
+
+![download](https://github.com/user-attachments/assets/87c5350e-c82a-49df-b253-b7728a987bd4)
+![download](https://github.com/user-attachments/assets/49241529-3819-4819-a2d2-9dccfee0e577)
+
+## 📊 Performance (Batch Size 32)
+The model is expected to achieve the following performance metrics on the test set:
+
+```
+[Loss, Accuracy]
+[0.0863410159945488, 0.9713642597198486]
+Accuracy: 97.14%
+               precision    recall  f1-score   support
+
+ rotated_left       0.96      0.98      0.97      1206
+rotated_right       0.98      0.97      0.97      1241
+      upright       0.98      0.97      0.98      1223
+  upside_down       0.97      0.97      0.97      1219
+
+     accuracy                           0.97      4889
+    macro avg       0.97      0.97      0.97      4889
+ weighted avg       0.97      0.97      0.97      4889
+
+```
+
+## Training Output (Batch Size 300)
+
+![download](https://github.com/user-attachments/assets/8d822c43-1bf0-4115-a119-66073aa49378)
+![download](https://github.com/user-attachments/assets/33b2566b-d7df-4436-8b91-b691a08a5175)
+
+## 📊 Performance (Batch Size 300)
+The model is expected to achieve the following performance metrics on the test set:
+
+```
+[Loss, Accuracy]
+[0.09200621396303177, 0.9707506895065308]
+Accuracy: 97.08%
+               precision    recall  f1-score   support
+
+ rotated_left       0.98      0.96      0.97      1206
+rotated_right       0.97      0.96      0.97      1241
+      upright       0.97      0.98      0.98      1223
+  upside_down       0.96      0.98      0.97      1219
+
+     accuracy                           0.97      4889
+    macro avg       0.97      0.97      0.97      4889
+ weighted avg       0.97      0.97      0.97      4889
+
+```
+
 ## 🏛️ InceptionV3 Model Architecture
 The model architecture is based on the MobileNet convolutional neural network, which is known for its efficiency and effectiveness in mobile and embedded devices.
 
