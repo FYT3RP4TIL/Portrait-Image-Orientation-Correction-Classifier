@@ -222,7 +222,10 @@ rotated_right       0.97      0.93      0.95      1241
 
 
 ## 🏛️ VGG-16 Model Architecture
-The model architecture is based on the MobileNet convolutional neural network, which is known for its efficiency and effectiveness in mobile and embedded devices.
+<img src="https://github.com/user-attachments/assets/ec8eabef-1398-4728-9ddd-e6d8ca76ffa7" 
+     alt="Image" 
+     width="60%" 
+     height="50%">
 
 
 ```python
@@ -271,7 +274,6 @@ def create_vgg16_model():
 ```
 
 ## 🏋️‍♀️ Training Configuration (VGG-16)
-The MobileNet model is trained using the following configuration:
 
 ```python
 # Train VGG16 model
@@ -387,7 +389,6 @@ rotated_right       0.97      0.96      0.97      1241
 ```
 
 ## 🏛️ InceptionV3 Model Architecture
-The model architecture is based on the MobileNet convolutional neural network, which is known for its efficiency and effectiveness in mobile and embedded devices.
 
 ![image](https://github.com/user-attachments/assets/26e06446-661b-49a5-8e1a-8965d60790dc)
 
@@ -409,7 +410,6 @@ def create_model_inception():
 ```
 
 ## 🏋️‍♀️ Training Configuration (InceptionV3)
-The MobileNet model is trained using the following configuration:
 
 ```python
 def train(model, filepath):
@@ -483,7 +483,35 @@ The trained model can accurately predict the orientation of portrait images, as 
 
 ![1](https://github.com/user-attachments/assets/44acf762-f799-4b35-a93d-f756e37e0bca)
 
+## Models That Can be Used
 
+| **Model** | **Total Input Parameters** |
+| --- | --- |
+| MobileNet | 2,208,880 |
+| MobileNetV2 | 2,259,696 |
+| DenseNet121 | 7,038,952 |
+| DenseNet169 | 12,753,032 |
+| ResNet50 | 25,636,712 |
+| InceptionV3 | 21,802,784 |
+| DenseNet201 | 20,062,984 |
+| ResNet101 | 44,707,176 |
+| InceptionResNetV2 | 55,491,712 |
+| ResNet152 | 60,192,584 |
+| VGG16 | 138,357,544 |
+| VGG19 | 143,667,240 |
+
+## Usage
+-----
+
+### Import Models
+
+```python
+from tensorflow.keras.applications import (
+    VGG16, VGG19, ResNet50, ResNet101, ResNet152,
+    InceptionV3, InceptionResNetV2, MobileNet, MobileNetV2,
+    DenseNet121, DenseNet169, DenseNet201
+)
+```
 ## 📚 Articles and Research Papers
 - [Orientation Visualization for Convolutional Neural Networks](https://www.cs.toronto.edu/~guerzhoy/oriviz/crv17.pdf)
 - [Automatic Image Orientation Detection Using Deep Learning](https://www.tdcommons.org/cgi/viewcontent.cgi?article=6334&context=dpubs_series)
