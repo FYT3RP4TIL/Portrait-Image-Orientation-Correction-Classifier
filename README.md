@@ -1,4 +1,4 @@
-# 📷 Portrait Image Orientation Classifier Using MobileNet
+# 📷 Portrait Image Orientation Classifier 
 
 ## 🌟 Overview
 This project implements a portrait orientation classifier using the MobileNet architecture via TensorFlow. The system identifies whether a portrait image is rotated (0°, 90°, 180°, or 270°) and automatically corrects it to the standard upright position, utilizing transfer learning for efficient training and deployment.
